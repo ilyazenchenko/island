@@ -37,18 +37,18 @@ public class GameMap {
             for (List<GameEntity> gmLst : lst) {
                 for (int i = 0; i < animalsInField; i++) {
                     GameEntity gameEntity;
-                    int probability = ThreadLocalRandom.current().nextInt(100);
+                    int probability = ThreadLocalRandom.current().nextInt(150);
                     if (probability < 11)
                         gameEntity = new Boar();
                     else if (probability < 21)
                         gameEntity = new Caterpillar();
-                    else if (probability < 31)
-                        gameEntity = new Duck();
-                    else if (probability < 41)
-                        gameEntity = new Rabbit();
-                    else if (probability < 51)
-                        gameEntity = new Fox();
                     else if (probability < 61)
+                        gameEntity = new Duck();
+                    else if (probability < 71)
+                        gameEntity = new Rabbit();
+                    else if (probability < 81)
+                        gameEntity = new Fox();
+                    else if (probability < 91)
                         gameEntity = new Wolf();
                     else
                         gameEntity = new Plant();

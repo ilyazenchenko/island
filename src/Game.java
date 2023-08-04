@@ -5,6 +5,7 @@ import model.Plant;
 import model.animals.predatory.PredatoryAnimal;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Game {
@@ -53,36 +54,22 @@ public class Game {
                 }
                 if (lst.size() != 1) {
                     var iterator = lst.listIterator();
-                    while (iterator.hasNext()) {
-                        GameEntity secondGameEntity = iterator.next();
-                        if (animal == secondGameEntity)
-                            continue;
-                        if (animal.getHealth() < 50) {
-                            if (animal.tryEat(secondGameEntity)) {
-                                iterator.remove();
-                                printAnimalEatsSecond(i, j, animal, secondGameEntity);
-                                if (iterator.nextIndex() - 1 < k)
-                                    k--;
-                                if (animal.getHealth() > 80) break point;
-                            }
-                            if(animal instanceof PredatoryAnimal && ((PredatoryAnimal)animal).isTired())
-                                break point;
-                        } else {
-                            if (animal.canEat(secondGameEntity)) {
-                                while (iterator.hasNext()) {
-                                    secondGameEntity = iterator.next();
-                                    if (animal == secondGameEntity || secondGameEntity.isSkipsAMoveNow())
-                                        continue;
-                                    if (animal.getClass().equals(secondGameEntity.getClass())) {
-                                        if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
-                                            lst.add(animal.multiply(secondGameEntity));
-                                            System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное "
-                                                    + animal.getClass().getSimpleName() + animal + " размножилось с животным "
-                                                    + secondGameEntity.getClass().getSimpleName() + secondGameEntity);
-                                        }
-                                        break point;
-                                    }
+                    GameEntity secondGameEntity;
+                    if (animal.getHealth() < 50) {
+                        k = tryToEatFull(i, j, k, animal, iterator);
+                    } else {
+                        while (iterator.hasNext()) {
+                            secondGameEntity = iterator.next();
+                            if (animal == secondGameEntity || secondGameEntity.isSkipsAMoveNow())
+                                continue;
+                            if (animal.getClass().equals(secondGameEntity.getClass())) {
+                                if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
+                                    lst.add(animal.multiply(secondGameEntity));
+                                    System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное "
+                                            + animal.getClass().getSimpleName() + animal + " размножилось с животным "
+                                            + secondGameEntity.getClass().getSimpleName() + secondGameEntity);
                                 }
+                                break point;
                             }
                         }
                     }
@@ -90,7 +77,26 @@ public class Game {
             }
         }
         lst.forEach(x -> x.setSkipsAMoveNow(false));
-        lst.stream().filter(x-> x instanceof PredatoryAnimal).forEach(x -> ((PredatoryAnimal)x).setTired(0));
+        lst.stream().filter(x -> x instanceof PredatoryAnimal).forEach(x -> ((PredatoryAnimal) x).setTired(0));
+    }
+
+    private int tryToEatFull(int i, int j, int k, Animal animal, ListIterator<GameEntity> iterator) {
+        GameEntity secondGameEntity;
+        while (iterator.hasNext() && animal.getHealth() < 80) {
+            secondGameEntity = iterator.next();
+            if (animal == secondGameEntity)
+                continue;
+            if (animal.tryEat(secondGameEntity)) {
+                iterator.remove();
+                printAnimalEatsSecond(i, j, animal, secondGameEntity);
+                if (iterator.nextIndex() - 1 < k)
+                    k--;
+                if (animal.getHealth() >= 80) return k;
+            }
+            if (animal instanceof PredatoryAnimal && ((PredatoryAnimal) animal).isTired())
+                return k;
+        }
+        return k;
     }
 
     private void tryAddPlant(int i, int j, List<GameEntity> lst) {
@@ -110,7 +116,7 @@ public class Game {
         System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное " +
                 animal.getClass().getSimpleName() + animal + " съело " +
                 (secondEntity.getClass().getSimpleName().equals("Plant") ? "растение " : "животное ")
-                + secondEntity.getClass().getSimpleName() + secondEntity + " hp: " +animal.getHealth());
+                + secondEntity.getClass().getSimpleName() + secondEntity + " hp: " + animal.getHealth());
     }
 
 }
