@@ -6,7 +6,7 @@ public abstract class GameEntity {
 
     protected int maxInField;
 
-    protected boolean previousMoveAdded = true;
+    protected boolean skipsAMoveNow = true;
 
     public GameEntity(double weight, int maxInField) {
         this.weight = weight;
@@ -28,12 +28,12 @@ public abstract class GameEntity {
         return Integer.toString(hashCode()%100);
     }
 
-    public boolean isPreviousMoveAdded() {
-        return previousMoveAdded;
+    public boolean isSkipsAMoveNow() {
+        return skipsAMoveNow;
     }
 
-    public void setPreviousMoveAdded(boolean thisMoveAdded) {
-        this.previousMoveAdded = thisMoveAdded;
+    public void setSkipsAMoveNow(boolean thisMoveAdded) {
+        this.skipsAMoveNow = thisMoveAdded;
     }
 
 }

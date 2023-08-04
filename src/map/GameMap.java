@@ -70,77 +70,104 @@ public class GameMap {
         }
     }
 
-    public void doMoves() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                doMovesInField(i, j);
-            }
-        }
+//    public void doMoves() {
+//        for (int i = 0; i < height; i++) {
+//            for (int j = 0; j < width; j++) {
+//                doMovesInField(i, j);
+//            }
+//        }
+//    }
+
+//    private void doMovesInField(int i, int j) {
+//        List<GameEntity> lst = map.get(i).get(j);
+//        for (int k = 0; k < lst.size(); k++) {
+//            point:
+//            {
+//                GameEntity gameEntity = lst.get(k);
+//                if(gameEntity.isPreviousMoveAdded()){
+//                    gameEntity.setPreviousMoveAdded(false);
+//                    continue;
+//                }
+//                if (gameEntity instanceof Plant) {
+//                    if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
+//                        lst.add(new Plant());
+//                        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] размножилось растение" + gameEntity);
+//                    }
+//                    continue;
+//                }
+//                Animal animal = (Animal) gameEntity;
+//                animal.setHealth(animal.getHealth() - 10);
+//                if (lst.size() != 1) {
+//                    var iterator = lst.listIterator();
+//                    while (iterator.hasNext()) {
+//                        GameEntity secondEntity = iterator.next();
+//                        if (animal == secondEntity)
+//                            continue;
+//                        if (animal.tryEat(secondEntity)) {
+//                            iterator.remove();
+//                            printAnimalEatsSecond(i, j, animal, secondEntity);
+//                            if(iterator.nextIndex()-1 < k){
+//                                k--;
+//                            }
+//                            break point;
+//                        } else {
+//                            if (animal.getHealth() <= 0) {
+//                                handleDeath(i, j, lst, k, animal);
+//                                k--;
+//                                break point;
+//                            }
+//                            if (animal.canEat(secondEntity))
+//                                break point;
+//                        }
+//                    }
+//                } else {
+//                    if (animal.getHealth() <= 0) {
+//                        handleDeath(i, j, lst, k, animal);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//    private static void handleDeath(int i, int j, List<GameEntity> lst, int k, Animal animal) {
+//        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] умерло животное " +
+//                animal.getClass().getSimpleName());
+//        lst.remove(k);
+//    }
+
+//    private static void printAnimalEatsSecond(int i, int j, Animal animal, GameEntity secondEntity) {
+//        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное " +
+//                animal.getClass().getSimpleName() + animal + " съело " +
+//                (secondEntity.getClass().getSimpleName().equals("Plant") ? "растение " : "животное ")
+//                + secondEntity.getClass().getSimpleName() + secondEntity);
+//    }
+
+    public List<List<List<GameEntity>>> getMap() {
+        return map;
     }
 
-    private void doMovesInField(int i, int j) {
-        List<GameEntity> lst = map.get(i).get(j);
-        for (int k = 0; k < lst.size(); k++) {
-            point:
-            {
-                GameEntity gameEntity = lst.get(k);
-                if(gameEntity.isPreviousMoveAdded()){
-                    gameEntity.setPreviousMoveAdded(false);
-                    continue;
-                }
-                if (gameEntity instanceof Plant) {
-                    if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
-                        lst.add(new Plant());
-                        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] размножилось растение" + gameEntity);
-                    }
-                    continue;
-                }
-                Animal animal = (Animal) gameEntity;
-                animal.setHealth(animal.getHealth() - 10);
-                if (lst.size() != 1) {
-                    var iterator = lst.listIterator();
-                    while (iterator.hasNext()) {
-                        GameEntity secondEntity = iterator.next();
-                        if (animal == secondEntity)
-                            continue;
-                        if (animal.tryEat(secondEntity)) {
-                            iterator.remove();
-                            printAnimalEatsSecond(i, j, animal, secondEntity);
-                            if(iterator.nextIndex()-1 < k){
-                                k--;
-                            }
-                            break point;
-                        } else {
-                            if (animal.getHealth() <= 0) {
-                                handleDeath(i, j, lst, k, animal);
-                                k--;
-                                break point;
-                            }
-                            if (animal.canEat(secondEntity))
-                                break point;
-                        }
-                    }
-                } else {
-                    if (animal.getHealth() <= 0) {
-                        handleDeath(i, j, lst, k, animal);
-                        break;
-                    }
-                }
-            }
-        }
+    public int getHeight() {
+        return height;
     }
 
-    private static void handleDeath(int i, int j, List<GameEntity> lst, int k, Animal animal) {
-        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] умерло животное " +
-                animal.getClass().getSimpleName());
-        lst.remove(k);
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    private static void printAnimalEatsSecond(int i, int j, Animal animal, GameEntity secondEntity) {
-        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное " +
-                animal.getClass().getSimpleName() + animal + " съело " +
-                (secondEntity.getClass().getSimpleName().equals("Plant") ? "растение " : "животное ")
-                + secondEntity.getClass().getSimpleName() + secondEntity);
+    public int getWidth() {
+        return width;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getAnimalsInField() {
+        return animalsInField;
+    }
+
+    public void setAnimalsInField(int animalsInField) {
+        this.animalsInField = animalsInField;
+    }
 }

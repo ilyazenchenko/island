@@ -1,6 +1,7 @@
 package model;
 
 import map.MoveDirection;
+import model.animals.predatory.PredatoryAnimal;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,6 +12,7 @@ public abstract class Animal extends GameEntity {
     protected double kgsForEatUp;
 
     protected int health;
+
 
     public Animal(double weight, int maxPerField, int fieldsPerMove, double kgsForEatUp, int health) {
         super(weight, maxPerField);
@@ -29,6 +31,8 @@ public abstract class Animal extends GameEntity {
     }
 
     public Animal multiply(GameEntity gameEntity) {
+        setSkipsAMoveNow(true);
+        gameEntity.setSkipsAMoveNow(true);
         try {
             return (Animal) gameEntity.getClass().getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
@@ -61,6 +65,7 @@ public abstract class Animal extends GameEntity {
     public boolean tryEat(GameEntity gameEntity) {
         if (!canEat(gameEntity))
             return false;
+        if (this instanceof PredatoryAnimal) ((PredatoryAnimal)this).increaseTired();
         return eat(gameEntity);
     }
 
@@ -80,4 +85,6 @@ public abstract class Animal extends GameEntity {
     public void setHealth(int health) {
         this.health = health;
     }
+
+
 }

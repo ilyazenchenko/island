@@ -30,4 +30,9 @@ public class Fox extends PredatoryAnimal {
         if(gameEntity instanceof Caterpillar) return true;
         return super.canEat(gameEntity);
     }
+
+    @Override
+    public void increaseTired() {
+        super.increaseTired();
+    }
 }

@@ -14,7 +14,9 @@ public abstract class HerbivoreAnimal extends Animal {
 
     @Override
     public int getProbabilityToEat(GameEntity gameEntity) {
-        return 100;
+        if(gameEntity instanceof Plant)
+            return 100;
+        return 0;
     }
 
     @Override
