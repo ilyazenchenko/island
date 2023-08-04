@@ -3,10 +3,7 @@ package map;
 import model.Animal;
 import model.GameEntity;
 import model.Plant;
-import model.animals.herbivore.Boar;
-import model.animals.herbivore.Caterpillar;
-import model.animals.herbivore.Duck;
-import model.animals.herbivore.Rabbit;
+import model.animals.herbivore.*;
 import model.animals.predatory.Fox;
 import model.animals.predatory.Wolf;
 
@@ -66,7 +63,7 @@ public class GameMap {
             for (int j = 0; j < width; j++) {
                 System.out.print("Клетка [" + (i + 1) + ", " + (j + 1) + "]: ");
                 for (GameEntity gameEntity : map.get(i).get(j)) {
-                    System.out.print(gameEntity.getClass().getSimpleName() + ", ");
+                    System.out.print(gameEntity.getClass().getSimpleName() + gameEntity + ", ");
                 }
                 System.out.println();
             }
@@ -87,10 +84,14 @@ public class GameMap {
             point:
             {
                 GameEntity gameEntity = lst.get(k);
+                if(gameEntity.isPreviousMoveAdded()){
+                    gameEntity.setPreviousMoveAdded(false);
+                    continue;
+                }
                 if (gameEntity instanceof Plant) {
-                    if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 10) {
+                    if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
                         lst.add(new Plant());
-                        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] размножилось растение");
+                        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] размножилось растение" + gameEntity);
                     }
                     continue;
                 }
@@ -105,22 +106,23 @@ public class GameMap {
                         if (animal.tryEat(secondEntity)) {
                             iterator.remove();
                             printAnimalEatsSecond(i, j, animal, secondEntity);
+                            if(iterator.nextIndex()-1 < k){
+                                k--;
+                            }
                             break point;
                         } else {
                             if (animal.getHealth() <= 0) {
-                                System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] умерло животное " +
-                                        animal.getClass().getSimpleName());
-                                lst.remove(k);
+                                handleDeath(i, j, lst, k, animal);
                                 k--;
                                 break point;
                             }
+                            if (animal.canEat(secondEntity))
+                                break point;
                         }
                     }
                 } else {
                     if (animal.getHealth() <= 0) {
-                        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] умерло животное " +
-                                animal.getClass().getSimpleName());
-                        lst.remove(k);
+                        handleDeath(i, j, lst, k, animal);
                         break;
                     }
                 }
@@ -128,11 +130,17 @@ public class GameMap {
         }
     }
 
+    private static void handleDeath(int i, int j, List<GameEntity> lst, int k, Animal animal) {
+        System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] умерло животное " +
+                animal.getClass().getSimpleName());
+        lst.remove(k);
+    }
+
     private static void printAnimalEatsSecond(int i, int j, Animal animal, GameEntity secondEntity) {
         System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное " +
-                animal.getClass().getSimpleName() + " съело " +
+                animal.getClass().getSimpleName() + animal + " съело " +
                 (secondEntity.getClass().getSimpleName().equals("Plant") ? "растение " : "животное ")
-                + secondEntity.getClass().getSimpleName());
+                + secondEntity.getClass().getSimpleName() + secondEntity);
     }
 
 }
