@@ -6,6 +6,8 @@ import model.animals.predatory.PredatoryAnimal;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static java.lang.Math.abs;
+
 public abstract class Animal extends GameEntity {
 
     protected int fieldsPerMove;
@@ -42,19 +44,24 @@ public abstract class Animal extends GameEntity {
     }
 
     public MoveDirection move(int leftToTop, int leftToBottom, int leftToRight, int leftToLeft) {
-        MoveDirection moveDirection = new MoveDirection();
-        for (int i = 0; i < fieldsPerMove; i++) {
-            int random = Math.abs(ThreadLocalRandom.current().nextInt(100));
-            if (random <= 25 && leftToTop > 0) {
-                moveDirection.increaseHeight();
-            } else if (random <= 50 && leftToBottom > 0) {
-                moveDirection.decreaseHeight();
-            } else if (random <= 75 && leftToRight > 0) {
-                moveDirection.increaseWidth();
-            } else if (leftToLeft > 0) {
-                moveDirection.decreaseWidth();
+        MoveDirection moveDirection;
+        do {
+            moveDirection = new MoveDirection();
+            for (int i = 0; i < fieldsPerMove; i++) {
+                int random = Math.abs(ThreadLocalRandom.current().nextInt(100));
+                if (random <= 25 && moveDirection.getToTop() < leftToTop) {
+                    moveDirection.increaseToTop();
+                } else if (random <= 50 && moveDirection.getToBottom() < leftToBottom) {
+                    moveDirection.increaseToBottom();
+                } else if (random <= 75 && moveDirection.getToRight() < leftToRight) {
+                    moveDirection.increaseToRight();
+                } else if (moveDirection.getToLeft() < leftToLeft) {
+                    moveDirection.increaseToLeft();
+                }
             }
-        }
+        }  while (abs(moveDirection.getToLeft()) - abs(moveDirection.getToRight()) == 0 &&
+                abs(moveDirection.getToTop()) - abs(moveDirection.getToBottom()) == 0);
+        setSkipsAMoveNow(true);
         return moveDirection;
     }
 
@@ -65,7 +72,7 @@ public abstract class Animal extends GameEntity {
     public boolean tryEat(GameEntity gameEntity) {
         if (!canEat(gameEntity))
             return false;
-        if (this instanceof PredatoryAnimal) ((PredatoryAnimal)this).increaseTired();
+        if (this instanceof PredatoryAnimal) ((PredatoryAnimal) this).increaseTired();
         return eat(gameEntity);
     }
 

@@ -1,31 +1,52 @@
 package map;
 
 public class MoveDirection {
-    private int inHeight;
-    private int inWidth;
+    private int toTop = 0;
+    private int toRight = 0;
 
-    public void increaseHeight() {
-        inHeight++;
+    private int toLeft = 0;
+
+    private int toBottom = 0;
+
+    public void increaseToTop() {
+        toTop++;
     }
 
-    public void decreaseHeight() {
-        inHeight--;
+    public void increaseToBottom() {
+        toBottom++;
     }
 
-    public void increaseWidth() {
-        inWidth++;
+    public void increaseToRight() {
+        toRight++;
     }
 
-    public void decreaseWidth() {
-        inWidth--;
+    public void increaseToLeft() {
+        toLeft++;
     }
 
-    public int getInHeight() {
-        return inHeight;
+    public int getToTop() {
+        return toTop;
     }
 
-    public int getInWidth() {
-        return inWidth;
+    public int getToRight() {
+        return toRight;
     }
 
+    public int getToLeft() {
+        return toLeft;
+    }
+
+    public int getToBottom() {
+        return toBottom;
+    }
+
+    @Override
+    public String toString() {
+        return "MoveDirection{" +
+                "toTop=" + toTop +
+                ", toRight=" + toRight +
+                ", toLeft=" + toLeft +
+                ", toBottom=" + toBottom +
+                '}';
+    }
 }

@@ -5,6 +5,7 @@ import model.GameEntity;
 import model.Plant;
 import model.animals.herbivore.*;
 import model.animals.predatory.Fox;
+import model.animals.predatory.PredatoryAnimal;
 import model.animals.predatory.Wolf;
 
 import java.util.ArrayList;
@@ -37,21 +38,20 @@ public class GameMap {
             for (List<GameEntity> gmLst : lst) {
                 for (int i = 0; i < animalsInField; i++) {
                     GameEntity gameEntity;
-                    int probability = ThreadLocalRandom.current().nextInt(150);
-                    if (probability < 11)
-                        gameEntity = new Boar();
-                    else if (probability < 21)
-                        gameEntity = new Caterpillar();
-                    else if (probability < 61)
-                        gameEntity = new Duck();
-                    else if (probability < 71)
-                        gameEntity = new Rabbit();
-                    else if (probability < 81)
-                        gameEntity = new Fox();
-                    else if (probability < 91)
+                    int probability = ThreadLocalRandom.current().nextInt(1660);
+                    if (probability < 30)
                         gameEntity = new Wolf();
-                    else
+                    else if (probability < 60)
+                        gameEntity = new Fox();
+                    else if (probability < 110)
+                        gameEntity = new Boar();
+                    else if (probability < 260)
+                        gameEntity = new Rabbit();
+                    else if (probability < 460)
+                        gameEntity = new Duck();
+                    else if (probability < 660)
                         gameEntity = new Plant();
+                    else gameEntity = new Caterpillar();
                     gmLst.add(gameEntity);
                 }
             }
@@ -59,15 +59,20 @@ public class GameMap {
     }
 
     public void printStatistics() {
+        int predatoryCnt = 0, herbivoreCnt = 0, plantCnt = 0;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 System.out.print("Клетка [" + (i + 1) + ", " + (j + 1) + "]: ");
                 for (GameEntity gameEntity : map.get(i).get(j)) {
                     System.out.print(gameEntity.getClass().getSimpleName() + gameEntity + ", ");
+                    if(gameEntity instanceof PredatoryAnimal) predatoryCnt ++;
+                    else if (gameEntity instanceof HerbivoreAnimal) herbivoreCnt ++;
+                    else if(gameEntity instanceof Plant) plantCnt ++;
                 }
                 System.out.println();
             }
         }
+        System.out.println("Хищников: "+ predatoryCnt + ", травоядных: "+ herbivoreCnt +", растений: " + plantCnt);
     }
 
 //    public void doMoves() {

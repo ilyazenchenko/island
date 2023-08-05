@@ -1,7 +1,9 @@
 import map.GameMap;
+import map.MoveDirection;
 import model.Animal;
 import model.GameEntity;
 import model.Plant;
+import model.animals.herbivore.Caterpillar;
 import model.animals.predatory.PredatoryAnimal;
 
 import java.util.List;
@@ -54,30 +56,58 @@ public class Game {
                 }
                 if (lst.size() != 1) {
                     var iterator = lst.listIterator();
-                    GameEntity secondGameEntity;
                     if (animal.getHealth() < 50) {
                         k = tryToEatFull(i, j, k, animal, iterator);
-                    } else {
-                        while (iterator.hasNext()) {
-                            secondGameEntity = iterator.next();
-                            if (animal == secondGameEntity || secondGameEntity.isSkipsAMoveNow())
-                                continue;
-                            if (animal.getClass().equals(secondGameEntity.getClass())) {
-                                if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
-                                    lst.add(animal.multiply(secondGameEntity));
-                                    System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное "
-                                            + animal.getClass().getSimpleName() + animal + " размножилось с животным "
-                                            + secondGameEntity.getClass().getSimpleName() + secondGameEntity);
-                                }
-                                break point;
-                            }
+                        if (animal.getHealth() < 50) {
+                            move(i, j, lst, animal);
                         }
+                    } else {
+                        tryToMultiply(i, j, lst, animal, iterator);
                     }
                 }
             }
         }
         lst.forEach(x -> x.setSkipsAMoveNow(false));
         lst.stream().filter(x -> x instanceof PredatoryAnimal).forEach(x -> ((PredatoryAnimal) x).setTired(0));
+    }
+
+    private void tryToMultiply(int i, int j, List<GameEntity> lst, Animal animal, ListIterator<GameEntity> iterator) {
+        while (iterator.hasNext()) {
+            GameEntity secondGameEntity = iterator.next();
+            if (animal == secondGameEntity || secondGameEntity.isSkipsAMoveNow())
+                continue;
+            if (animal.getClass().equals(secondGameEntity.getClass())) {
+                int whatToDo = Math.abs(ThreadLocalRandom.current().nextInt(100));
+                if (whatToDo < 20) {
+                    multiply(i, j, lst, animal, secondGameEntity);
+                }
+                return;
+            }
+        }
+    }
+
+    private void move(int i, int j, List<GameEntity> lst, Animal animal) {
+        if(animal instanceof Caterpillar) return;
+        MoveDirection animalMoveDirection = animal.move(i, gameMap.getHeight() - i - 1,
+                gameMap.getWidth() - j - 1, j);
+        int vertical = i + animalMoveDirection.getToBottom() - animalMoveDirection.getToTop();
+        int horizontal = j + animalMoveDirection.getToRight() - animalMoveDirection.getToLeft();
+        List<GameEntity> newLst = gameMap.getMap().get(vertical).get(horizontal);
+        if (normalQuantity(newLst, animal)) {
+            lst.remove(animal);
+            newLst.add(animal);
+        }
+        System.out.println(animal.getClass().getSimpleName() + animal + " перешел из клетки [" + (i + 1) + ", " + (j + 1) +
+                "] в клетку [" + (vertical + 1) + ", " + (horizontal + 1) + "]");
+    }
+
+    private void multiply(int i, int j, List<GameEntity> lst, Animal animal, GameEntity secondGameEntity) {
+        if (normalQuantity(lst, animal)) {
+            lst.add(animal.multiply(secondGameEntity));
+            System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] животное "
+                    + animal.getClass().getSimpleName() + animal + " размножилось с животным "
+                    + secondGameEntity.getClass().getSimpleName() + secondGameEntity);
+        }
     }
 
     private int tryToEatFull(int i, int j, int k, Animal animal, ListIterator<GameEntity> iterator) {
@@ -100,10 +130,15 @@ public class Game {
     }
 
     private void tryAddPlant(int i, int j, List<GameEntity> lst) {
-        if (Math.abs(ThreadLocalRandom.current().nextInt(100)) < 20) {
+        if (normalQuantity(lst, new Plant())) {
             lst.add(new Plant());
             System.out.println("В клетке [" + (i + 1) + ", " + (j + 1) + "] выросло растение");
         }
+    }
+
+    private boolean normalQuantity(List<GameEntity> lst, GameEntity gameEntity) {
+        long count = lst.stream().filter(x -> x.getClass().equals(gameEntity.getClass())).count();
+        return count < gameEntity.getMaxPerField();
     }
 
     private void handleDeath(int i, int j, List<GameEntity> lst, int k, Animal animal) {
