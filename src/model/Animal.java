@@ -1,6 +1,7 @@
 package model;
 
 import map.MoveDirection;
+import model.animals.herbivore.Caterpillar;
 import model.animals.predatory.PredatoryAnimal;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,15 +13,13 @@ public abstract class Animal extends GameEntity {
 
     protected int fieldsPerMove;
     protected double kgsForEatUp;
+    protected int health = 100;
 
-    protected int health;
 
-
-    public Animal(double weight, int maxPerField, int fieldsPerMove, double kgsForEatUp, int health) {
+    public Animal(double weight, int maxPerField, int fieldsPerMove, double kgsForEatUp) {
         super(weight, maxPerField);
         this.fieldsPerMove = fieldsPerMove;
         this.kgsForEatUp = kgsForEatUp;
-        this.health = health;
     }
 
     public boolean eat(GameEntity gameEntity) {
@@ -59,7 +58,7 @@ public abstract class Animal extends GameEntity {
                     moveDirection.increaseToLeft();
                 }
             }
-        }  while (abs(moveDirection.getToLeft()) - abs(moveDirection.getToRight()) == 0 &&
+        } while (abs(moveDirection.getToLeft()) - abs(moveDirection.getToRight()) == 0 &&
                 abs(moveDirection.getToTop()) - abs(moveDirection.getToBottom()) == 0);
         setSkipsAMoveNow(true);
         return moveDirection;
@@ -67,12 +66,11 @@ public abstract class Animal extends GameEntity {
 
     public abstract int getProbabilityToEat(GameEntity gameEntity);
 
-    public abstract boolean canEat(GameEntity gameEntity);
-
     public boolean tryEat(GameEntity gameEntity) {
-        if (!canEat(gameEntity))
+        if (getProbabilityToEat(gameEntity) == 0)
             return false;
-        if (this instanceof PredatoryAnimal) ((PredatoryAnimal) this).increaseTired();
+        if (this instanceof PredatoryAnimal && !(gameEntity instanceof Caterpillar))
+            ((PredatoryAnimal) this).increaseTired();
         return eat(gameEntity);
     }
 

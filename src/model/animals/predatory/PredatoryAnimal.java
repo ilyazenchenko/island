@@ -9,19 +9,10 @@ public abstract class PredatoryAnimal extends Animal{
 
     protected int tired = 0;
 
-    public PredatoryAnimal(double weight, int maxPerField, int fieldsPerMove, int kgsForEatUp, int health) {
-        super(weight, maxPerField, fieldsPerMove, kgsForEatUp, health);
+    public PredatoryAnimal(double weight, int maxPerField, int fieldsPerMove, int kgsForEatUp) {
+        super(weight, maxPerField, fieldsPerMove, kgsForEatUp);
     }
 
-    @Override
-    public boolean canEat(GameEntity gameEntity) {
-        if (gameEntity instanceof Caterpillar) return false;
-        return gameEntity instanceof HerbivoreAnimal;
-    }
-
-    public void hunt(GameEntity gameEntity) {
-
-    }
     public void increaseTired(){
         tired ++;
     }

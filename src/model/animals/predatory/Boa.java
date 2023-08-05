@@ -2,18 +2,19 @@ package model.animals.predatory;
 
 import model.GameEntity;
 
-public class Wolf extends PredatoryAnimal {
+public class Boa extends PredatoryAnimal{
 
-    public Wolf() {
-        super(50, 30, 3, 8);
+    public Boa() {
+        super(15, 30, 1, 3);
     }
 
     @Override
     public int getProbabilityToEat(GameEntity gameEntity) {
         return switch (gameEntity.getClass().getSimpleName()) {
-            case "Rabbit" -> 60;
-            case "Duck" -> 40;
-            case "Boar" -> 15;
+            case "Fox" -> 15;
+            case "Rabbit" -> 20;
+            case "Mouse" -> 40;
+            case "Duck" -> 10;
             default -> 0;
         };
     }

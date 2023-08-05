@@ -18,7 +18,7 @@ public class Game {
         gameMap = new GameMap(mapHeight, mapWidth, animalsInField);
     }
 
-    public void start(int iterations) {
+    public void run(int iterations) {
         for (int i = 0; i < iterations; i++) {
             doMoves();
             gameMap.printStatistics();
@@ -58,7 +58,7 @@ public class Game {
                     var iterator = lst.listIterator();
                     if (animal.getHealth() < 50) {
                         k = tryToEatFull(i, j, k, animal, iterator);
-                        if (animal.getHealth() < 50) {
+                        if (animal.getHealth() < 50 && !(animal instanceof Caterpillar)) {
                             move(i, j, lst, animal);
                         }
                     } else {
@@ -87,18 +87,20 @@ public class Game {
     }
 
     private void move(int i, int j, List<GameEntity> lst, Animal animal) {
-        if(animal instanceof Caterpillar) return;
-        MoveDirection animalMoveDirection = animal.move(i, gameMap.getHeight() - i - 1,
-                gameMap.getWidth() - j - 1, j);
-        int vertical = i + animalMoveDirection.getToBottom() - animalMoveDirection.getToTop();
-        int horizontal = j + animalMoveDirection.getToRight() - animalMoveDirection.getToLeft();
-        List<GameEntity> newLst = gameMap.getMap().get(vertical).get(horizontal);
-        if (normalQuantity(newLst, animal)) {
-            lst.remove(animal);
-            newLst.add(animal);
+        for (int k = 0; k < 3; k++) {
+            MoveDirection animalMoveDirection = animal.move(i, gameMap.getHeight() - i - 1,
+                    gameMap.getWidth() - j - 1, j);
+            int vertical = i + animalMoveDirection.getToBottom() - animalMoveDirection.getToTop();
+            int horizontal = j + animalMoveDirection.getToRight() - animalMoveDirection.getToLeft();
+            List<GameEntity> newLst = gameMap.getMap().get(vertical).get(horizontal);
+            if (normalQuantity(newLst, animal)) {
+                lst.remove(animal);
+                newLst.add(animal);
+                System.out.println(animal.getClass().getSimpleName() + animal + " перешел из клетки [" + (i + 1) + ", " + (j + 1) +
+                        "] в клетку [" + (vertical + 1) + ", " + (horizontal + 1) + "]");
+                return;
+            }
         }
-        System.out.println(animal.getClass().getSimpleName() + animal + " перешел из клетки [" + (i + 1) + ", " + (j + 1) +
-                "] в клетку [" + (vertical + 1) + ", " + (horizontal + 1) + "]");
     }
 
     private void multiply(int i, int j, List<GameEntity> lst, Animal animal, GameEntity secondGameEntity) {
@@ -136,7 +138,7 @@ public class Game {
         }
     }
 
-    private boolean normalQuantity(List<GameEntity> lst, GameEntity gameEntity) {
+    private static boolean normalQuantity(List<GameEntity> lst, GameEntity gameEntity) {
         long count = lst.stream().filter(x -> x.getClass().equals(gameEntity.getClass())).count();
         return count < gameEntity.getMaxPerField();
     }

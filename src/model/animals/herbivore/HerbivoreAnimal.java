@@ -8,8 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class HerbivoreAnimal extends Animal {
 
-    public HerbivoreAnimal(double weight, int maxPerField, int fieldsPerMove, double kgsForEatUp, int health) {
-        super(weight, maxPerField, fieldsPerMove, kgsForEatUp, health);
+    public HerbivoreAnimal(double weight, int maxPerField, int fieldsPerMove, double kgsForEatUp) {
+        super(weight, maxPerField, fieldsPerMove, kgsForEatUp);
     }
 
     @Override
@@ -17,11 +17,6 @@ public abstract class HerbivoreAnimal extends Animal {
         if(gameEntity instanceof Plant)
             return 100;
         return 0;
-    }
-
-    @Override
-    public boolean canEat(GameEntity gameEntity) {
-        return gameEntity instanceof Plant;
     }
 
 }

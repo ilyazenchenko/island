@@ -13,8 +13,6 @@ public abstract class GameEntity {
         this.maxInField = maxInField;
     }
 
-    public abstract boolean canEat(GameEntity gameEntity);
-
     public double getWeight() {
         return weight;
     }
