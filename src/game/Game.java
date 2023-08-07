@@ -39,31 +39,19 @@ public class Game {
         List<GameEntity> fieldLst = gameMap.getMap().get(line).get(column);
         tryAddPlant(line, column, fieldLst);
         for (int k = 0; k < fieldLst.size(); k++) {
-            k = fieldLst.get(k).tryAMove(fieldLst, gameMap, line, column);
+            GameEntity gameEntity = fieldLst.get(k);
+            if (!(gameEntity instanceof Plant)) {
+                k = gameEntity.tryAMove(fieldLst, gameMap, line, column);
+            }
         }
         fieldLst.forEach(x -> x.setSkipsAMoveNow(false));
-        fieldLst.stream().filter(x -> x instanceof PredatoryAnimal).forEach(x -> ((PredatoryAnimal) x).setTired(0));
     }
 
-//    private void tryToMultiply(int i, int j, List<GameEntity> lst, Animal animal, ListIterator<GameEntity> iterator) {
-//        while (iterator.hasNext()) {
-//            GameEntity secondGameEntity = iterator.next();
-//            if (animal == secondGameEntity || secondGameEntity.isSkipsAMoveNow())
-//                continue;
-//            if (animal.getClass().equals(secondGameEntity.getClass())) {
-//                int whatToDo = Math.abs(ThreadLocalRandom.current().nextInt(100));
-//                if (whatToDo < 20) {
-//                    multiply(i, j, lst, animal, secondGameEntity);
-//                }
-//                return;
-//            }
-//        }
-//    }
 
     public static void printMove(int line, int column, int newLine, int newColumn, Animal animal) {
-        System.out.println(animal.getClass().getSimpleName() + animal + " перешел из клетки ["
-                + line + ", " + column +
-                "] в клетку [" + newLine + ", " + newColumn + "]");
+        System.out.println(animal + " перешел из клетки ["
+                + (line + 1) + ", " + (column + 1) +
+                "] в клетку [" + (newLine + 1) + ", " + (newColumn + 1) + "]");
     }
 
     public static void printMultiply(int i, int j, Animal animal, GameEntity secondGameEntity) {
@@ -72,30 +60,11 @@ public class Game {
                 + secondGameEntity);
     }
 
-    private int tryToEatFull(int i, int j, int k, Animal animal, ListIterator<GameEntity> iterator) {
-        GameEntity secondGameEntity;
-        while (iterator.hasNext() && animal.getHealth() < 80) {
-            secondGameEntity = iterator.next();
-            if (animal == secondGameEntity)
-                continue;
-            if (animal.tryEat(secondGameEntity)) {
-                iterator.remove();
-                printAnimalEatsSecond(i, j, animal, secondGameEntity);
-                if (iterator.nextIndex() - 1 < k)
-                    k--;
-                if (animal.getHealth() >= 80) return k;
-            }
-            if (animal instanceof PredatoryAnimal && ((PredatoryAnimal) animal).isTired())
-                return k;
-        }
-        return k;
-    }
-
     private void tryAddPlant(int i, int j, List<GameEntity> lst) {
         long plantsQuantity = lst.stream().filter(x -> x.getClass().equals(Plant.class)).count();
         int k;
         for (k = 0; k < 100; k++, plantsQuantity++) {
-            if (plantsQuantity <= 200) {
+            if (plantsQuantity < 200) {
                 lst.add(new Plant());
             } else break;
         }

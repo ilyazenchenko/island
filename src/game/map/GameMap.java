@@ -35,7 +35,7 @@ public class GameMap {
             for (List<GameEntity> gmLst : lst) {
                 for (int i = 0; i < animalsInField; i++) {
                     GameEntity gameEntity;
-                    int probability = ThreadLocalRandom.current().nextInt(2545);
+                    int probability = ThreadLocalRandom.current().nextInt(2545); // 2545
                     if (probability < 30)
                         gameEntity = new Wolf();
                     else if (probability < 60)

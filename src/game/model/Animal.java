@@ -51,8 +51,6 @@ public abstract class Animal extends GameEntity {
     public boolean tryEat(GameEntity gameEntity) {
         if (getProbabilityToEat(gameEntity) == 0)
             return false;
-        if (this instanceof PredatoryAnimal && !(gameEntity instanceof Caterpillar))
-            ((PredatoryAnimal) this).increaseTired();
         return eat(gameEntity);
     }
 
@@ -70,11 +68,12 @@ public abstract class Animal extends GameEntity {
     }
 
     public void setHealth(int health) {
-        this.health = health;
+        this.health = Math.max(health - 10, 0);
     }
 
     public int makeAMove(List<GameEntity> fieldLst, GameMap gameMap, int line, int column) {
-        if (getHealth() <= 0) {
+        setHealth(health - 10);
+        if (getHealth() == 0) {
             Game.printDeath(line, column, this);
             int index = fieldLst.indexOf(this);
             fieldLst.remove(this);
@@ -102,8 +101,6 @@ public abstract class Animal extends GameEntity {
                 Game.printAnimalEatsSecond(line, column, this, secondGameEntity);
                 if (health >= 80) return true;
             }
-            if (this instanceof PredatoryAnimal && ((PredatoryAnimal) this).isTired())
-                return false;
         }
         return false;
     }
@@ -127,7 +124,7 @@ public abstract class Animal extends GameEntity {
         return count < getMaxPerField();
     }
 
-    private int move(int line, int column, List<GameEntity> lst, GameMap gameMap) {
+    protected int move(int line, int column, List<GameEntity> lst, GameMap gameMap) {
         for (int k = 0; k < 3; k++) {
             MoveDirection animalMoveDirection = MoveDirection.getMoveDirection(line, gameMap.getHeight()- line - 1,
                     gameMap.getWidth() - column - 1, column, this);
