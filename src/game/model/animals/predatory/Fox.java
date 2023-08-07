@@ -1,7 +1,6 @@
-package model.animals.predatory;
+package game.model.animals.predatory;
 
-import model.GameEntity;
-import model.animals.herbivore.Caterpillar;
+import game.model.GameEntity;
 
 public class Fox extends PredatoryAnimal {
 

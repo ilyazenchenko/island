@@ -1,4 +1,8 @@
-package model;
+package game.model;
+
+import game.map.GameMap;
+
+import java.util.List;
 
 public abstract class GameEntity {
 
@@ -23,7 +27,7 @@ public abstract class GameEntity {
 
     @Override
     public String toString() {
-        return Integer.toString(hashCode()%100);
+        return getClass().getSimpleName()+hashCode()%100;
     }
 
     public boolean isSkipsAMoveNow() {
@@ -32,6 +36,12 @@ public abstract class GameEntity {
 
     public void setSkipsAMoveNow(boolean thisMoveAdded) {
         this.skipsAMoveNow = thisMoveAdded;
+    }
+
+    public int tryAMove(List<GameEntity> fieldLst, GameMap gameMap, int line, int column){
+        if (this instanceof Plant || skipsAMoveNow)
+            return fieldLst.indexOf(this);
+        return ((Animal)this).makeAMove(fieldLst, gameMap, line, column);
     }
 
 }

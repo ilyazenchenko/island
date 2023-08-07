@@ -1,10 +1,9 @@
-package map;
+package game.map;
 
-import model.Animal;
-import model.GameEntity;
-import model.Plant;
-import model.animals.herbivore.*;
-import model.animals.predatory.*;
+import game.model.GameEntity;
+import game.model.Plant;
+import game.model.animals.herbivore.*;
+import game.model.animals.predatory.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class GameMap {
             for (List<GameEntity> gmLst : lst) {
                 for (int i = 0; i < animalsInField; i++) {
                     GameEntity gameEntity;
-                    int probability = ThreadLocalRandom.current().nextInt(1660);
+                    int probability = ThreadLocalRandom.current().nextInt(2545);
                     if (probability < 30)
                         gameEntity = new Wolf();
                     else if (probability < 60)
@@ -67,7 +66,9 @@ public class GameMap {
                         gameEntity = new Goat();
                     else if (probability < 2535)
                         gameEntity = new Sheep();
-                        gmLst.add(gameEntity);
+                    else
+                        gameEntity = new Buffalo();
+                    gmLst.add(gameEntity);
                 }
             }
         }
@@ -79,7 +80,7 @@ public class GameMap {
             for (int j = 0; j < width; j++) {
                 System.out.print("Клетка [" + (i + 1) + ", " + (j + 1) + "]: ");
                 for (GameEntity gameEntity : map.get(i).get(j)) {
-                    System.out.print(gameEntity.getClass().getSimpleName() + gameEntity + ", ");
+                    System.out.print(gameEntity + ", ");
                     if (gameEntity instanceof PredatoryAnimal) predatoryCnt++;
                     else if (gameEntity instanceof HerbivoreAnimal) herbivoreCnt++;
                     else if (gameEntity instanceof Plant) plantCnt++;

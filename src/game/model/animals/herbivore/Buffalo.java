@@ -1,4 +1,4 @@
-package model.animals.herbivore;
+package game.model.animals.herbivore;
 
 public class Buffalo extends HerbivoreAnimal{
     public Buffalo() {

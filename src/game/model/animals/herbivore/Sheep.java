@@ -1,4 +1,4 @@
-package model.animals.herbivore;
+package game.model.animals.herbivore;
 
 public class Sheep extends HerbivoreAnimal{
     public Sheep() {

@@ -1,6 +1,6 @@
-package model.animals.herbivore;
+package game.model.animals.herbivore;
 
-import model.GameEntity;
+import game.model.GameEntity;
 
 public class Mouse extends HerbivoreAnimal{
 

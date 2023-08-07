@@ -1,10 +1,8 @@
-package model.animals.herbivore;
+package game.model.animals.herbivore;
 
-import model.Animal;
-import model.GameEntity;
-import model.Plant;
-
-import java.util.concurrent.ThreadLocalRandom;
+import game.model.Animal;
+import game.model.GameEntity;
+import game.model.Plant;
 
 public abstract class HerbivoreAnimal extends Animal {
 

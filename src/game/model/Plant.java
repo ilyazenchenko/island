@@ -1,4 +1,4 @@
-package model;
+package game.model;
 
 public class Plant extends GameEntity{
 

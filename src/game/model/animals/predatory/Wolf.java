@@ -1,6 +1,6 @@
-package model.animals.predatory;
+package game.model.animals.predatory;
 
-import model.GameEntity;
+import game.model.GameEntity;
 
 public class Wolf extends PredatoryAnimal {
 

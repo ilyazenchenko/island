@@ -1,12 +1,11 @@
-package model.animals.herbivore;
+package game.model.animals.herbivore;
 
-import model.GameEntity;
-import model.Plant;
+import game.model.GameEntity;
 
-public class Duck extends HerbivoreAnimal {
+public class Boar extends HerbivoreAnimal {
 
-    public Duck() {
-        super(1, 200, 4, 0.15);
+    public Boar() {
+        super(400, 50, 2, 50);
     }
 
     @Override
